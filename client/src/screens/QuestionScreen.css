@@ -1,0 +1,45 @@
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around 
+}
+
+#question {
+  display: flex;
+  flex: 6;
+  flex-direction: column;
+  width: 100%;
+  /* background: blue; */
+  margin-left: 20px;
+}
+
+#question-columns {
+  display: flex;
+  flex-direction: row;
+  margin-left: 100px;
+}
+
+#summary{
+  flex:2;
+  text-align: center;
+  border-left: 2px solid black;
+  padding: 10px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+p.text {
+  font-size: 12px;
+  text-align: left;
+}
+
+.save-btn {
+  width: 160px;
+  padding: 10px 15px;
+  margin-top: 50px;
+  align-self: center;
+}
