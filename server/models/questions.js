@@ -18,9 +18,16 @@ const retrieveAllQuestions = (question) => {
   return collection.find({}).toArray();
 };
 
+const deleteOneQuestion = async (id) => {
+  const collection = models.dbConnection.db().collection(collectionName);
+  let deletionResult = await collection.deleteOne({id});
+  return deletionResult;
+};
+
 module.exports = {
   insertNewQuestion,
-  retrieveAllQuestions
+  retrieveAllQuestions,
+  deleteOneQuestion
 } 
 
 //  module.exports = { post, getAll, findDocumentById };

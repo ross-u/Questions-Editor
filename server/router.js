@@ -10,6 +10,7 @@ router.post('/image', controller.createImage);
 // Questions
 router.get('/questions', controller.getAllQuestions);
 router.post('/question', controller.createNewQuestion);
+router.delete('/question/:id', controller.deleteQuestionById);
 
 // Catchcall for 404
 router.get('/*', async (req, res) => {

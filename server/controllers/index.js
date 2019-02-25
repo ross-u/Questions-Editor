@@ -10,6 +10,4 @@ fs.readdirSync(__dirname)
     controllers[controllerName] = require(`./${file}`);
   });
 
-console.log('CONTROLLERS', controllers)
-
 module.exports = controllers;
