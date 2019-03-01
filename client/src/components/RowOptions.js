@@ -33,7 +33,6 @@ class RowOptions extends Component {
   componentDidMount () {
     M.AutoInit();
     if (this.props.row.answers.length === 0) {
-      console.log('RESETING OPTIONS TO FALSE');
       this.setState({answersArray: new Array(this.props.columns.length).fill(false)})
     }
     else this.setState({answersArray: this.props.row.answers});

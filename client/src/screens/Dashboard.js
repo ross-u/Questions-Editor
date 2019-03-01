@@ -53,7 +53,6 @@ class Dashboard extends Component {
             </h5>)
             : questions.map(question => {
               return (
-                <div>
                   <div
                     className='question-tab card z-depth-3'
                     key={shortid.generate()}
@@ -83,7 +82,6 @@ class Dashboard extends Component {
                       </div>
                     </div>
                   </div>
-                </div>
                 )
             })
             
