@@ -4,6 +4,13 @@
 
 ## Getting Started
 
+
+1. Clone the repository.
+```bash
+git clone https://github.com/ross-u/Questions-Editor.git
+cd Questions-Editor/
+```
+
 ### Front-end
 
 1. Install all client/front-end dependencies
