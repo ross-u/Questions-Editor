@@ -6,7 +6,7 @@
 
 ### Front-end
 
-Install all client/front-end dependencies
+1. Install all client/front-end dependencies
 
 ```bash
 cd client/
