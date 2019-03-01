@@ -1,32 +1,28 @@
 import React, { Component } from 'react';
-import { connect } from "react-redux";
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
+import { connect } from "react-redux";
 import axios from "axios";
-import { storeAllQuestions } from "../redux/actions";
+import { API_URL } from './../utils/config'
 import './Dashboard.css';
 import shortid from 'shortid';
 import M from "materialize-css";
 
+import { storeAllQuestions } from "../redux/actions";
+
 class Dashboard extends Component {
 
   getAllQuestions = () => {
-    const url = "http://localhost:3000/questions";
     axios
-      .get(url)
-      .then(res => {
-        this.props.storeAllQuestions(res.data);
-      })
+      .get(`${API_URL}/questions`)
+      .then(res => this.props.storeAllQuestions(res.data))
       .catch(err => console.error("Fetch All Question error", err));
   }
 
   deleteQuestion = async (id) => {
-    const url = `http://localhost:3000/question/${id}`;
     axios
-      .delete(url)
-      .then(res => {
-        this.props.storeAllQuestions(res.data);
-      })
+      .delete(`${API_URL}/question/${id}`)
+      .then(res => this.props.storeAllQuestions(res.data))
       .catch(err => console.error("Delete question error", err));
   }
 
@@ -59,7 +55,7 @@ class Dashboard extends Component {
                       pathname: '/question',
                       state: { question: question }
                     }}
-                  >
+                >
                   <h4 className='question-title-link'>{question.question || '...'}</h4>
                 </Link>
                 <div className="buttons-wrapper">
@@ -69,7 +65,7 @@ class Dashboard extends Component {
                     }}
                     className="dashboard-tab-btn btn-floating waves-effect waves-light btn"
                   >
-                  <i className="material-icons left z-depth-3">edit</i>
+                    <i className="material-icons left z-depth-3">edit</i>
                   </Link>
                   <div
                     onClick={ () => this.deleteQuestion(question.id)}
@@ -78,19 +74,15 @@ class Dashboard extends Component {
                   <i className="material-icons left z-depth-3">delete</i>
                   </div>
                 </div>
-              </div>
-            )
+              </div>)
           })
         }
-      </div>
-    )
+      </div>)
   }
 }
 
-
 const mapStateToProps = state => ({
   questions: state.questions,
-  selectedQuestionId: state.selectedQuestionId
 });
 
 const mapDispatchToProps = dispatch => ({
