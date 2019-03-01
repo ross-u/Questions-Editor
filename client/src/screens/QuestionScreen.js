@@ -10,12 +10,18 @@ import "./QuestionScreen.css";
 import { createQuestion, updateQuestion } from "../redux/actions";
 import shortid from 'shortid';
 
+
+const maxColumns = 7;
+const maxRows = 12;
+
 class QuestionScreen extends Component {
   state = {
     id: 0,
     question: "",
-    columns: [{ image: undefined, label: undefined }],
-    rows: [{ image: undefined, label: undefined, answer: undefined, answers: []}],
+    columns: [],
+    rows: [],
+    // columns: [{ image: undefined, label: undefined }],
+    // rows: [{ image: undefined, label: undefined, answer: undefined, answers: []}],
     imagesUploaded: 0,
     minColLabel: undefined,
     maxColLabel: undefined,
@@ -55,7 +61,7 @@ class QuestionScreen extends Component {
     }
   };
 
-  handleColumnLabelChange = async e => {
+  handleColumnLabelChange = async (e) => {
     e.preventDefault();
     let { columns } = this.state;
     const newLabel = e.target.value;
@@ -68,7 +74,7 @@ class QuestionScreen extends Component {
     this.setLabelLengths("columns");
   };
 
-  handleRowLabelChange = async e => {
+  handleRowLabelChange = async (e) => {
     e.preventDefault();
     const i = e.target.name.slice(3, e.target.name.length);
     const rows = [...this.state.rows];
@@ -79,6 +85,7 @@ class QuestionScreen extends Component {
   };
 
   addColumn = async () => {
+    if (this.state.columns.length === maxColumns) return;
     const columns = [...this.state.columns];
     columns.push({ image: undefined, label: undefined });
     await this.setState({ columns });
@@ -86,6 +93,7 @@ class QuestionScreen extends Component {
   };
 
   addRow = async () => {
+    if (this.state.rows.length === maxRows) return;
     const rows = [...this.state.rows];
     rows.push({ image: undefined, label: undefined, answer: undefined, answers: [] });
     await this.setState({ rows });
@@ -95,8 +103,11 @@ class QuestionScreen extends Component {
   deleteLabel = async (labelType, index) => {
     const rowsOrColumns = labelType === "row" ? "rows" : "columns";
     const labelsArray = [...this.state[rowsOrColumns]];
+    let { imagesUploaded } = this.state;
+    if (labelsArray[index].image) imagesUploaded -= 1;
     labelsArray.splice(index, 1);
-    await this.setState({ [rowsOrColumns]: labelsArray });
+
+    await this.setState({ [rowsOrColumns]: labelsArray, imagesUploaded });
     this.props.updateQuestion(this.state);
     this.setLabelLengths(rowsOrColumns);
   };
@@ -120,13 +131,24 @@ class QuestionScreen extends Component {
 
   updateRow = async (rowIndex, numberOfColumns, checkedIndex, answer) => {
     console.log('UPDATE ROW INDEX');
-    console.log('ROW INDEX PARAMS', {rowIndex, numberOfColumns, checkedIndex, answer})
     const rows = [...this.state.rows];
     rows[rowIndex].answers = new Array(numberOfColumns).fill(false);
     rows[rowIndex].answers[checkedIndex] = true;
     rows[rowIndex].answer = answer;
     await this.setState({ rows });
     this.props.updateQuestion(this.state);
+  }
+
+  resetRows = async () => {
+    console.log('RESET ROWS');
+    const rows = [...this.state.rows];
+    const emptyRows = rows.map( (row) => {
+      row.answers = [];
+      return row;
+    });
+    await this.setState({ ...this.state, rows: emptyRows });
+    this.props.updateQuestion(this.state);
+    console.log('AFTER RESET', this.state);
   }
 
   saveQuestion = () => {
@@ -147,6 +169,8 @@ class QuestionScreen extends Component {
     if (!question) {
       (async () => {
         await this.setState({ id: shortid.generate()});
+        this.addColumn();
+        this.addRow();
         this.props.createQuestion(this.state);
       })();
     } else {
@@ -168,7 +192,7 @@ class QuestionScreen extends Component {
       maxRowLabel
     } = this.state;
     return (
-      <div className="container">
+      <div className="container-main">
         <div id="question">
           <QuestionTitle
             value={this.state.question || ""}
@@ -181,7 +205,7 @@ class QuestionScreen extends Component {
                   return (
                     <Label
                       labelType="col"
-                      key={shortid.generate()}
+                      key={index}
                       index={index}
                       label={column}
                       handleChange={this.handleColumnLabelChange}
@@ -199,7 +223,8 @@ class QuestionScreen extends Component {
             {rows
               ? rows.map((row, index) => {
                   return (
-                    <div key={shortid.generate()} className="row">
+                    <div key={index} className="row">
+                    
                       <Label
                         labelType="row"
                         index={index}
@@ -222,9 +247,14 @@ class QuestionScreen extends Component {
             <AddButton name="row" func={this.addRow} />
           </div>
 
-          <button className="save-btn" onClick={this.saveQuestion}>
-            SAVE QUESTION
+          <button className="save-btn btn waves-effect waves-light" onClick={this.saveQuestion}>
+            Save Question
           </button>
+
+          <button className="save-btn btn waves-effect cyan darken-3  waves-light" onClick={this.resetRows}>
+            Reset Form
+          </button>
+
         </div>
 
         <div id="summary">

@@ -1,4 +1,5 @@
 import React from 'react';
+import Textarea from 'react-textarea-autosize';
 
 function QuestionTitle(props) {
   const {handleChange, value} = props;
@@ -6,7 +7,7 @@ function QuestionTitle(props) {
     <div>
       <form onSubmit={(e) => e.preventDefault()}>
         <label htmlFor=''>
-          <input
+          <Textarea
             type='text'
             value={value}
             onChange={handleChange}
@@ -24,7 +25,11 @@ const styles = {
     fontSize: '26px',
     width: '90%',
     margin: '10px',
-    marginLeft: '10px',
+    marginLeft: '10',
+    resize: 'none',
+    maxHeight: '100px',
+    overflow: 'hidden',
+    border: 'none',
     borderBottom: '1px solid gray',
   }
 }

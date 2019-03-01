@@ -1,15 +1,19 @@
 import React from 'react';
 import AddImage from './AddImage';
-import DeleteIcon from './../assets/delete.png';
+import M from 'materialize-css';
+import Textarea from 'react-textarea-autosize';
 
 function Label(props) {
   const { index, label, labelType, value, handleChange, updateImage, deleteLabel } = props;
+
+  M.AutoInit();
 
   return (
     <div style={styles.labelContainer[labelType]}>
 
       <a href="#!" onClick={() => deleteLabel(labelType, index)}>
-        <img src={DeleteIcon} alt="" style={styles.deleteLabel[labelType]}/>
+        {/* <img src={DeleteIcon} alt="" /> */}
+        <i className="xsmall material-icons" style={styles.deleteLabel[labelType]}>close</i>
       </a>
       <div>
         <AddImage
@@ -20,13 +24,14 @@ function Label(props) {
       </div>
       <form onSubmit={(e) => e.preventDefault()}>
         <label>
-          <input
+          <Textarea
             name={`${labelType}${index}`}
             type='text'
             value={value || ''}
             placeholder={`${labelType}${index}`}
-            onChange={handleChange}
-            style={styles.labelInput[labelType]} />
+            onChange={(e) => handleChange(e)}
+            style={styles.labelInput[labelType]}
+          />
         </label>
       </form>
     </div>
@@ -39,13 +44,18 @@ const styles = {
       width: '13px',
       height: '13px',
       position: 'relative',
-      left: '-5px'
+      left: '-10px',
+      color: 'black',
+      fontSize: '14px',
     },
     col: {
       width: '13px',
       height: '13px',
       position: 'relative',
       top: '-2px',
+      left: '6px',
+      color: 'black',
+      fontSize: '14px'
     }
   },
   labelContainer: {
@@ -56,33 +66,47 @@ const styles = {
       justifyContent: 'space-evenly',
       flexDirection: 'row',
       width: '90px',
-      height: '60px',
+      height: 'auto',
       padding: '5px',
       marginTop: '15px',
+      marginBottom: '15px',
     },
     col: {
       display: 'flex',
       position:'relative',
       flexDirection: 'column',
       width: '50px',
-      height: '70px',
-      marginLeft: '10px',
-      padding: '10px 10px 0px 10px',
+      height: 'auto',
+      marginLeft: '40px',
+      padding: '10px 10px 10px 10px',
       textAlign: 'center',
     },
   },
   labelInput: {
-      row: {
-        height: '20px',
-        width: '50px',
-        textAlign: 'center',
-      },
-      col: {
-        marginTop: '5px',
-        height: '20px',
-        width: '50px',
-        textAlign: 'center',
-      }
+    row: {
+      width: '100px',
+      textAlign: 'center',
+      marginBottom: '0px',
+      marginLeft: '10px',
+      marginRight: '50px',
+      fontSize: '12px',
+      resize: 'none',
+      maxHeight: '100px',
+      overflow: 'hidden',
+      verticalAlign: 'middle',
+      border: 'none',
+    },
+    col: {
+      marginTop: '5px',
+      width: '70px',
+      marginLeft: '-12px',
+      textAlign: 'center',
+      resize: 'none',
+      maxHeight: '100px',
+      overflow: 'hidden',
+      verticalAlign: 'middle',
+      border: 'none',
+    }
   },
 }
 

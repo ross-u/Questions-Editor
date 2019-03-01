@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import axios from "axios";
 import { storeAllQuestions } from "../redux/actions";
 import './Dashboard.css';
-import EditIcon from './../assets/edit.png';
-import AddIcon from './../assets/add.png';
-
+import shortid from 'shortid';
+import M from "materialize-css";
 
 class Dashboard extends Component {
 
@@ -16,13 +15,23 @@ class Dashboard extends Component {
     axios
       .get(url)
       .then(res => {
-        console.log('FETCH GET ALL QUESTION', res.data);
         this.props.storeAllQuestions(res.data);
       })
-      .catch(err => console.error("Image upload error", err));
+      .catch(err => console.error("Fetch All Question error", err));
+  }
+
+  deleteQuestion = async (id) => {
+    const url = `http://localhost:3000/question/${id}`;
+    axios
+      .delete(url)
+      .then(res => {
+        this.props.storeAllQuestions(res.data);
+      })
+      .catch(err => console.error("Delete question error", err));
   }
 
   componentDidMount() {
+    M.AutoInit();
     this.getAllQuestions();
   }
 
@@ -30,28 +39,44 @@ class Dashboard extends Component {
     const questions = this.props.questions || [];
     return (
       <div className='container-dashboard'>
-        <h1>DASHBOARD</h1>
-        <button
-          className="add-question-btn"
+
+        <h3 className="header">Dashboard</h3>
+        <button 
+          className="btn-floating btn-large waves-effect waves-light green add-question-btn pulse z-depth-2"
           onClick={() => this.props.history.push('/question')}
         >
-          <img src={AddIcon} alt="" />
+          <i className="material-icons">add</i>
         </button>
         {
           questions.map(question => {
             return (
-              <div className='question-tab'>
-                <h5>Question:</h5>
-                <h2>{question.question || '...'}</h2>
+              <div 
+                className='question-tab card z-depth-3'
+                key={shortid.generate()}  
+              >
+                <h6>Question:</h6>
+                <Link to={{
+                      pathname: '/question',
+                      state: { question: question }
+                    }}
+                  >
+                  <h4 className='question-title-link'>{question.question || '...'}</h4>
+                </Link>
                 <div className="buttons-wrapper">
                   <Link to={{
                       pathname: '/question',
                       state: { question: question }
                     }}
-                    className="dashboard-tab-btn"
+                    className="dashboard-tab-btn btn-floating waves-effect waves-light btn"
                   >
-                    <img src={EditIcon} alt="" />
+                  <i className="material-icons left z-depth-3">edit</i>
                   </Link>
+                  <div
+                    onClick={ () => this.deleteQuestion(question.id)}
+                    className="dashboard-tab-btn btn-floating waves-effect waves-light btn red"
+                  >
+                  <i className="material-icons left z-depth-3">delete</i>
+                  </div>
                 </div>
               </div>
             )

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import addImageButton from "./../assets/addImage.png";
 import axios from "axios";
-
+import M from "materialize-css";
+  
 class AddButton extends Component {
   state = {
     selectedFile: null,
@@ -36,6 +36,11 @@ class AddButton extends Component {
       .catch(err => console.error("Image upload error", err));
   };
 
+  componentDidMount() {      
+    M.AutoInit();
+  }
+
+
   render() {
     const { label } = this.props;
     return (
@@ -50,7 +55,12 @@ class AddButton extends Component {
           {
             (!label.image)
               ? (<a style={styles.addBtnWrapper} href="#!" onClick={this.triggerFileInput}>
-                  <img style={styles.addImageBtn} src={addImageButton} alt="" />
+                <button
+                  style={styles.addImageBtn}
+                  className="btn waves-effect waves-light teal lighten-2 add-question-btn center-align z-depth-2"
+                >
+                  <i className="medium material-icons">add_photo_alternate</i>
+                </button>
                 </a>)
               : (<img src={label.image} alt="" style={styles.labelImage} />)
           }
@@ -65,17 +75,21 @@ const styles = {
     border: "0",
     background: "none",
     textDecoration: "none",
-    width: "50px",
-    height: "50px",
+    width: "48px",
+    height: "48px",
+    margin: '0',
+    marginBottom: '0px',
+    boxShadow: '2px 3px 4px 1px rgba(0,0,0,0.18)',
   },
   addBtnWrapper: {
     textAlign: 'center',
   },
   addImageBtn: {
-    marginTop: '6px',
-    padding: '10px',
-    background: '#E0E0E0',
-
+    width: '48px',
+    height: '48px',
+    paddingTop: '5px',
+    margin: '0',
+    marginBottom: '5px',
   },
 };
 

@@ -4,7 +4,8 @@ import './App.css';
 import QuestionScreen from './screens/QuestionScreen';
 import Dashboard from './screens/Dashboard';
 
-
+import 'materialize-css/dist/css/materialize.min.css';
+import 'material-icons';
 
 class App extends Component {
   render() {

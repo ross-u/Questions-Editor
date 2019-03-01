@@ -1,8 +1,7 @@
-.container {
-  padding: 20px;
+.container-main {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around 
+  flex-direction: row;;
+  padding-top: 15px;
 }
 
 #question {
@@ -10,14 +9,14 @@
   flex: 6;
   flex-direction: column;
   width: 100%;
-  /* background: blue; */
-  margin-left: 20px;
+  align-items: center;
 }
 
 #question-columns {
   display: flex;
   flex-direction: row;
-  margin-left: 100px;
+  margin-left: 170px;
+  margin-bottom: -15px;
 }
 
 #summary{
@@ -25,21 +24,48 @@
   text-align: center;
   border-left: 2px solid black;
   padding: 10px;
+  align-items: center;
 }
 
-.row {
-  display: flex;
-  flex-direction: row;
+#summary > h3 {
+  margin-bottom: 35px;
+  text-align: left;
+  margin-left: 30px;
 }
 
 p.text {
-  font-size: 12px;
+  font-size: 13px;
   text-align: left;
+  margin-left: 30px;
+}
+
+div.row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: -20px;
 }
 
 .save-btn {
   width: 160px;
   padding: 10px 15px;
   margin-top: 50px;
+  margin-left: 100px;
   align-self: center;
+}
+
+div div.label-container:last-of-type {
+  animation: slide-up 1.4s ease;
+}
+
+div#question-rows div.label-container:last-of-type {
+  animation: slide-up 1.4s ease;
+}
+
+@keyframes slide-up {
+  0% {
+      opacity: 0.3;
+  }
+  100% {
+      opacity: 1;
+  }
 }

@@ -7,16 +7,20 @@
 
 .question-tab {
   width: 80%;
-  padding: 0px 50px;
+  padding: 15px 30px;
   margin-bottom: 20px;
   border: 1px solid black;
   position: relative;
 }
 
+.question-title-link {
+  color: black;
+}
+
 .buttons-wrapper {
   position: absolute;
-  right: 0px;
-  top: 0px;
+  right: 10px;
+  top: 10px;
 }
 
 button.add-question-btn {
@@ -29,6 +33,10 @@ button.add-question-btn img {
   width: 30px;
   height: 30px;
   padding: 5px;
+}
+
+.dashboard-tab-btn {
+  margin-left: 10px;
 }
 
 .dashboard-tab-btn img {
