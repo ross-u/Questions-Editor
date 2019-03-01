@@ -1,5 +1,4 @@
-const ObjectID = require('mongodb').ObjectID;
-const db = require('./index');
+const db = require('../db');
 
 const collectionName = 'questions';
 
