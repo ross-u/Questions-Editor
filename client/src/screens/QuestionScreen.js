@@ -107,19 +107,7 @@ class QuestionScreen extends Component {
     labelsArray[index].image = imageUrl;
     await this.setState({ [rowsOrColumns]: labelsArray, imagesUploaded });
     this.props.updateQuestion(this.state);
-    
 
-    // if (labelType === "row") {
-    //   const rows = [...this.state.rows];
-    //   rows[index].image = imageUrl;
-    //   await this.setState({ rows, imagesUploaded });
-    //   this.props.updateQuestion(this.state);
-    // } else {
-    //   const columns = [...this.state.columns];
-    //   columns[index].image = imageUrl;
-    //   await this.setState({ columns, imagesUploaded });
-    //   this.props.updateQuestion(this.state);
-    // }
   };
 
   updateRow = async (rowIndex, numberOfColumns, checkedIndex, answer) => {
