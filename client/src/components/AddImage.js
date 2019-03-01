@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
-import M from "materialize-css";
 import { API_URL } from './../utils/config'
+import M from "materialize-css";
 
 class AddButton extends Component {
   state = {
@@ -41,7 +41,6 @@ class AddButton extends Component {
     M.AutoInit();
   }
 
-
   render() {
     const { label } = this.props;
     return (
@@ -55,7 +54,10 @@ class AddButton extends Component {
           />
           {
             (!label.image)
-              ? (<a style={styles.addBtnWrapper} href="#!" onClick={this.triggerFileInput}>
+              ? (<a 
+                  style={styles.addBtnWrapper}
+                  href="#!"
+                  onClick={this.triggerFileInput}>
                 <button
                   style={styles.addImageBtn}
                   className="btn waves-effect waves-light teal lighten-2 add-question-btn center-align z-depth-2"
@@ -63,7 +65,11 @@ class AddButton extends Component {
                   <i className="medium material-icons">add_photo_alternate</i>
                 </button>
                 </a>)
-              : (<img src={label.image} alt="" style={styles.labelImage} />)
+              : (<img 
+                  src={label.image} 
+                  alt="" 
+                  style={styles.labelImage}
+                />)
           }
         </form>
       </div>

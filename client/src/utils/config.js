@@ -1,5 +1,5 @@
-const apiUrl = 'http://localhost:3005';
-
-module.exports = {
-  API_URL: apiUrl
+export const API_URL = 'http://localhost:3005';
+export const MAX_SIZE = {
+  columns: 7,
+  rows: 12,
 }

@@ -37,45 +37,56 @@ class Dashboard extends Component {
       <div className='container-dashboard'>
 
         <h3 className="header">Dashboard</h3>
-        <button 
+        <button
           className="btn-floating btn-large waves-effect waves-light green add-question-btn pulse z-depth-2"
           onClick={() => this.props.history.push('/question')}
         >
           <i className="material-icons">add</i>
         </button>
         {
-          questions.map(question => {
-            return (
-              <div 
-                className='question-tab card z-depth-3'
-                key={shortid.generate()}  
-              >
-                <h6>Question:</h6>
-                <Link to={{
-                      pathname: '/question',
-                      state: { question: question }
-                    }}
-                >
-                  <h4 className='question-title-link'>{question.question || '...'}</h4>
-                </Link>
-                <div className="buttons-wrapper">
-                  <Link to={{
-                      pathname: '/question',
-                      state: { question: question }
-                    }}
-                    className="dashboard-tab-btn btn-floating waves-effect waves-light btn"
-                  >
-                    <i className="material-icons left z-depth-3">edit</i>
-                  </Link>
+          (questions.length === 0)
+            ? (<h5>Press
+              <span className="btn-floating btn-small waves-light green add-question-btn-sm">
+                <i className="material-icons">add</i>
+              </span>
+              to add new Question
+            </h5>)
+            : questions.map(question => {
+              return (
+                <div>
                   <div
-                    onClick={ () => this.deleteQuestion(question.id)}
-                    className="dashboard-tab-btn btn-floating waves-effect waves-light btn red"
+                    className='question-tab card z-depth-3'
+                    key={shortid.generate()}
                   >
-                  <i className="material-icons left z-depth-3">delete</i>
+                    <h6>Question:</h6>
+                    <Link to={{
+                      pathname: '/question',
+                      state: { question: question }
+                    }}
+                    >
+                      <h4 className='question-title-link'>{question.question || '...'}</h4>
+                    </Link>
+                    <div className="buttons-wrapper">
+                      <Link to={{
+                        pathname: '/question',
+                        state: { question: question }
+                      }}
+                        className="dashboard-tab-btn btn-floating waves-effect waves-light btn"
+                      >
+                        <i className="material-icons left z-depth-3">edit</i>
+                      </Link>
+                      <div
+                        onClick={() => this.deleteQuestion(question.id)}
+                        className="dashboard-tab-btn btn-floating waves-effect waves-light btn red"
+                      >
+                        <i className="material-icons left z-depth-3">delete</i>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>)
-          })
+                )
+            })
+            
         }
       </div>)
   }

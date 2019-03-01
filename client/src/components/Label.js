@@ -4,7 +4,8 @@ import M from 'materialize-css';
 import Textarea from 'react-textarea-autosize';
 
 function Label(props) {
-  const { index, label, labelType, value, handleChange, updateImage, deleteLabel } = props;
+  const { index, label, labelType, value, labelMethods } = props;
+  const { handleLabelChange, updateImage, deleteLabel } = labelMethods;
 
   M.AutoInit();
 
@@ -12,7 +13,6 @@ function Label(props) {
     <div style={styles.labelContainer[labelType]}>
 
       <a href="#!" onClick={() => deleteLabel(labelType, index)}>
-        {/* <img src={DeleteIcon} alt="" /> */}
         <i className="xsmall material-icons" style={styles.deleteLabel[labelType]}>close</i>
       </a>
       <div>
@@ -29,7 +29,7 @@ function Label(props) {
             type='text'
             value={value || ''}
             placeholder={`${labelType}${index}`}
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => handleLabelChange(e, labelType)}
             style={styles.labelInput[labelType]}
           />
         </label>

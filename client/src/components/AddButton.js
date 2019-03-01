@@ -2,16 +2,17 @@ import React from 'react';
 import M from 'materialize-css';
 
 function AddButton(props) {
+  const { labelType, addLabel } = props;
   M.AutoInit();
+  
   return (
     <button
-      style={styles.addButton[props.name]}
+      style={styles.addButton[labelType]}
       className="btn-floating btn-medium waves-effect waves-light cyan darken-3 add-question-btn center-align"
-      onClick={props.func}
+      onClick={() => addLabel(labelType)}
     >
       <i className="medium material-icons">playlist_add</i>
     </button>
-
   )
 }
 

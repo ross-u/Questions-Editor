@@ -6,7 +6,7 @@
 }
 
 .question-tab {
-  width: 80%;
+  width: 80vw;
   padding: 15px 30px;
   margin-bottom: 20px;
   border: 1px solid black;
@@ -29,11 +29,10 @@ button.add-question-btn {
   margin-bottom: 20px;
 }
 
-button.add-question-btn img {
-  width: 30px;
-  height: 30px;
-  padding: 5px;
+span.add-question-btn-sm {
+  margin: 15px;
 }
+
 
 .dashboard-tab-btn {
   margin-left: 10px;

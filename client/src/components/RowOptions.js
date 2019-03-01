@@ -8,9 +8,8 @@ class RowOptions extends Component {
 
   // col, colIndex, updateRow, row
   
-  renderRadioButtons = (colIndex, columns, updateRow, row, rowIndex ) => {
+  renderRadioButtons = (colIndex, columns, updateRow, rowIndex ) => {
 
-    console.log('RENDERING RADIO BUTTONS');
     return (
       <div key={colIndex} style={styles.inputBox}>
         <p>
@@ -41,7 +40,7 @@ class RowOptions extends Component {
   }
 
   render () {
-    const { columns, updateRow, indexNum, row } = this.props;
+    const { columns, updateRow, indexNum } = this.props;
 
     return (
       <div style={styles.inputFormWrapper}>
@@ -49,7 +48,7 @@ class RowOptions extends Component {
         {
           (!columns)
             ? null
-            : columns.map((col, colIndex) => this.renderRadioButtons(colIndex, columns, updateRow, row, indexNum))
+            : columns.map((col, colIndex) => this.renderRadioButtons(colIndex, columns, updateRow, indexNum))
         }
       </form>
     </div>
@@ -69,7 +68,6 @@ const styles = {
     alignItems: 'center',
     height: '100px',
     width: 'auto',
-    // background: 'yellow',
     marginLeft: '22px',
 
   },
@@ -86,9 +84,6 @@ const styles = {
     height: '20px',
     width: '20px',
     opacity: '1 !important',
-    ':checked': {
-      opacity: '1 !important',
-    }
   }
 }
 

@@ -1,10 +1,4 @@
-// ACTIONS
-
-// export const getQuestion = (id) => ({
-//   type: 'GET_QUESTION',
-//   id
-// });
-
+////  ACTIONS ////
 export const createQuestion = (question) => ({
   type: 'CREATE_QUESTION',
   question

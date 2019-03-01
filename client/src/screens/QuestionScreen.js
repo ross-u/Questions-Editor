@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from 'react-router';
 import axios from "axios";
 import shortid from 'shortid';
-import { API_URL } from './../utils/config'
+import { API_URL, MAX_SIZE } from './../utils/config'
 import "./QuestionScreen.css";
 
 import QuestionTitle from "../components/QuestionTitle";
@@ -12,9 +12,7 @@ import RowOptions from "../components/RowOptions";
 import AddButton from "../components/AddButton";
 import { createQuestion, updateQuestion } from "../redux/actions";
 import { Question, Column, Row } from './../utils/schemas';
-
-const maxColumns = 7;
-const maxRows = 12;
+import { normalizeNumber } from './../utils/normalizeNumber'
 
 class QuestionScreen extends Component {
   state = new Question();
@@ -25,70 +23,34 @@ class QuestionScreen extends Component {
     this.props.updateQuestion(this.state);
   };
 
-  normalizeNumber = num => {
-    if (isFinite(num)) return num;
-    return "";
-  };
-
-  setLabelLengths = async labelType => {
-    let minLabel = Number.POSITIVE_INFINITY;
-    let maxLabel = Number.NEGATIVE_INFINITY;
-    const labelsArray = this.state[labelType];
-
-    labelsArray.forEach(obj => {
-      if (obj.label && obj.label.length < minLabel) minLabel = obj.label.length;
-      if (obj.label && obj.label.length > maxLabel) maxLabel = obj.label.length;
-    });
-
-    if (labelType === "columns") {
-      await this.setState({ minCol: minLabel, maxCol: maxLabel });
-    } else {
-      await this.setState({ minRow: minLabel, maxRow: maxLabel });
-    }
-  };
-
-  handleColumnLabelChange = async (e) => {
-    e.preventDefault();
-    let { columns } = this.state;
-    const newLabel = e.target.value;
-
-    const i = e.target.name.slice(3, e.target.name.length);
-    columns = [...this.state.columns];
-    columns[i].label = newLabel;
-    await this.setState({ columns });
-    this.props.updateQuestion(this.state);
-    this.setLabelLengths("columns");
-  };
-
-  handleRowLabelChange = async (e) => {
+  ////  LABEL METHODS ////
+  handleLabelChange = async (e, labelType) => {
     e.preventDefault();
     const i = e.target.name.slice(3, e.target.name.length);
-    const rows = [...this.state.rows];
-    rows[i].label = e.target.value;
-    await this.setState({ rows });
+    const rowsOrColumns = labelType === "row" ? "rows" : "columns";
+
+    const labelsArray = [...this.state[rowsOrColumns]];
+    labelsArray[i].label = e.target.value;
+
+    await this.setState({ [rowsOrColumns]: labelsArray });
     this.props.updateQuestion(this.state);
-    this.setLabelLengths("rows");
+    this.setLabelLengths(rowsOrColumns);
   };
 
-  addColumn = async () => {
-    if (this.state.columns.length === maxColumns) return;
-    const columns = [...this.state.columns];
-    columns.push(new Column());
-    await this.setState({ columns });
-    this.props.updateQuestion(this.state);
-  };
+  addLabel = async (labelType) => {
+    const rowsOrColumns = labelType === "row" ? "rows" : "columns";
+    const labelsArray = [...this.state[rowsOrColumns]];
 
-  addRow = async () => {
-    if (this.state.rows.length === maxRows) return;
-    const rows = [...this.state.rows];
-    rows.push(new Row());
-    await this.setState({ rows });
+    if (labelsArray.length === MAX_SIZE[rowsOrColumns]) return;
+    labelsArray.push( (labelType === "row") ? new Row() : new Column());
+    await this.setState({ [rowsOrColumns]: labelsArray });
     this.props.updateQuestion(this.state);
   };
 
   deleteLabel = async (labelType, index) => {
     const rowsOrColumns = labelType === "row" ? "rows" : "columns";
     const labelsArray = [...this.state[rowsOrColumns]];
+
     let { imagesUploaded } = this.state;
     if (labelsArray[index].image) imagesUploaded -= 1;
     labelsArray.splice(index, 1);
@@ -107,9 +69,24 @@ class QuestionScreen extends Component {
     labelsArray[index].image = imageUrl;
     await this.setState({ [rowsOrColumns]: labelsArray, imagesUploaded });
     this.props.updateQuestion(this.state);
-
   };
 
+  setLabelLengths = async labelType => {
+    let minLabel = Number.POSITIVE_INFINITY;
+    let maxLabel = Number.NEGATIVE_INFINITY;
+    const labelsArray = this.state[labelType];
+
+    labelsArray.forEach(obj => {
+      if (obj.label && obj.label.length < minLabel) minLabel = obj.label.length;
+      if (obj.label && obj.label.length > maxLabel) maxLabel = obj.label.length;
+    });
+
+    if (labelType === "columns") {
+      await this.setState({ minCol: minLabel, maxCol: maxLabel });
+    } else await this.setState({ minRow: minLabel, maxRow: maxLabel });
+  };
+
+  ////  ROW METHODS ////
   updateRow = async (rowIndex, numberOfColumns, checkedIndex, answer) => {
     const rows = [...this.state.rows];
     rows[rowIndex].answers = new Array(numberOfColumns).fill(false);
@@ -129,6 +106,7 @@ class QuestionScreen extends Component {
     this.props.updateQuestion(this.state);
   }
 
+  ////  API METHODS ////
   saveQuestion = () => {
     axios
       .post(`${API_URL}/question`, this.state)
@@ -136,13 +114,14 @@ class QuestionScreen extends Component {
       .catch(err => console.error("Image upload error", err));
   };
 
+
   componentDidMount() {
     const question = this.props.location.state;
     if (!question) {
       (async () => {
         await this.setState({ id: shortid.generate()});
-        this.addColumn();
-        this.addRow();
+        this.addLabel('column');
+        this.addLabel('row');
         this.props.createQuestion(this.state);
       })();
     } else {
@@ -152,6 +131,9 @@ class QuestionScreen extends Component {
 
   render() {
     const {columns, rows, imagesUploaded, minCol, maxCol, minRow, maxRow } = this.state;
+    const { handleLabelChange, updateImage, deleteLabel } = this;
+    const labelMethods = { handleLabelChange, updateImage, deleteLabel };
+
     return (
       <div className="container-main">
         <div id="question">
@@ -161,27 +143,25 @@ class QuestionScreen extends Component {
           />
 
           <div id="question-columns">
-            {columns
+            {(columns)
               ? columns.map((column, index) => {
                   return (
                     <Label
-                      key={index}
                       labelType="col"
                       index={index}
+                      key={index}
                       label={column}
-                      handleChange={this.handleColumnLabelChange}
-                      updateImage={this.updateImage}
-                      deleteLabel={this.deleteLabel}
                       value={columns[index].label}
+                      labelMethods={labelMethods}                 
                     />
                   );
                 })
               : null}
-            <AddButton name="column" func={this.addColumn} />
+            <AddButton labelType="column" addLabel={this.addLabel} />
           </div>
 
           <div id="question-rows">
-            {rows
+            {(rows)
               ? rows.map((row, index) => {
                   return (
                     <div key={index} className="row">
@@ -190,10 +170,8 @@ class QuestionScreen extends Component {
                         labelType="row"
                         index={index}
                         label={row}
-                        handleChange={this.handleRowLabelChange}
-                        updateImage={this.updateImage}
-                        deleteLabel={this.deleteLabel}
                         value={rows[index].label}
+                        labelMethods={labelMethods}
                       />
                       <RowOptions
                         indexNum={index}
@@ -205,7 +183,7 @@ class QuestionScreen extends Component {
                   );
                 })
               : null}
-            <AddButton name="row" func={this.addRow} />
+            <AddButton labelType="row" addLabel={this.addLabel} />
           </div>
 
           <button className="save-btn btn waves-effect waves-light" onClick={this.saveQuestion}>
@@ -220,28 +198,14 @@ class QuestionScreen extends Component {
 
         <div id="summary">
           <h3>Summary</h3>
-          <p className="text">
-            Number of rows: <span>{rows.length}</span>
-          </p>
-          <p className="text">
-            Number of columns: <span>{columns.length}</span>
-          </p>
-          <p className="text">
-            Number of images uploaded: <span>{imagesUploaded}</span>
-          </p>
+          <p> Number of rows: {rows.length} </p>
+          <p> Number of columns: {columns.length} </p>
+          <p> Number of images uploaded: {imagesUploaded} </p>
 
-          <p className="text">
-            Longest row label: {this.normalizeNumber(maxRow)}
-          </p>
-          <p className="text">
-            Shortest row label: {this.normalizeNumber(minRow)}
-          </p>
-          <p className="text">
-            Longest column label: {this.normalizeNumber(maxCol)}
-          </p>
-          <p className="text">
-            Shortest column label: {this.normalizeNumber(minCol)}
-          </p>
+          <p> Longest row label: {normalizeNumber(maxRow)} </p>
+          <p> Shortest row label: {normalizeNumber(minRow)} </p>
+          <p> Longest column label: {normalizeNumber(maxCol)} </p>
+          <p> Shortest column label: {normalizeNumber(minCol)} </p>
         </div>
       </div>
     );
