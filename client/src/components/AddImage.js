@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import M from "materialize-css";
-  
+import { API_URL } from './../utils/config'
+
 class AddButton extends Component {
   state = {
     selectedFile: null,
@@ -19,7 +20,7 @@ class AddButton extends Component {
   };
 
   fileUploadHandler = () => {
-    const url = "http://localhost:3000/image/";
+    const url = `${API_URL}/image/`;
     const fd = new FormData();
     fd.append("image", this.state.selectedFile, this.state.selectedFile.name);
 

@@ -41,9 +41,9 @@ class QuestionScreen extends Component {
     });
 
     if (labelType === "columns") {
-      await this.setState({ minColLabel: minLabel, maxColLabel: maxLabel });
+      await this.setState({ minCol: minLabel, maxCol: maxLabel });
     } else {
-      await this.setState({ minRowLabel: minLabel, maxRowLabel: maxLabel });
+      await this.setState({ minRow: minLabel, maxRow: maxLabel });
     }
   };
 
@@ -102,17 +102,24 @@ class QuestionScreen extends Component {
     const index = name.slice(3, name.length);
     const imagesUploaded = this.state.imagesUploaded + 1;
 
-    if (labelType === "row") {
-      const rows = [...this.state.rows];
-      rows[index].image = imageUrl;
-      await this.setState({ rows, imagesUploaded });
-      this.props.updateQuestion(this.state);
-    } else {
-      const columns = [...this.state.columns];
-      columns[index].image = imageUrl;
-      await this.setState({ columns, imagesUploaded });
-      this.props.updateQuestion(this.state);
-    }
+    const rowsOrColumns = labelType === "row" ? "rows" : "columns";
+    const labelsArray = [...this.state[rowsOrColumns]];
+    labelsArray[index].image = imageUrl;
+    await this.setState({ [rowsOrColumns]: labelsArray, imagesUploaded });
+    this.props.updateQuestion(this.state);
+    
+
+    // if (labelType === "row") {
+    //   const rows = [...this.state.rows];
+    //   rows[index].image = imageUrl;
+    //   await this.setState({ rows, imagesUploaded });
+    //   this.props.updateQuestion(this.state);
+    // } else {
+    //   const columns = [...this.state.columns];
+    //   columns[index].image = imageUrl;
+    //   await this.setState({ columns, imagesUploaded });
+    //   this.props.updateQuestion(this.state);
+    // }
   };
 
   updateRow = async (rowIndex, numberOfColumns, checkedIndex, answer) => {
@@ -151,28 +158,17 @@ class QuestionScreen extends Component {
         this.props.createQuestion(this.state);
       })();
     } else {
-      (async () => {
-        await this.setState(question.question);
-      })();
+      this.setState(question.question);
     }
-
   }
 
   render() {
-    const {
-      columns,
-      rows,
-      imagesUploaded,
-      minColLabel,
-      maxColLabel,
-      minRowLabel,
-      maxRowLabel
-    } = this.state;
+    const {columns, rows, imagesUploaded, minCol, maxCol, minRow, maxRow } = this.state;
     return (
       <div className="container-main">
         <div id="question">
           <QuestionTitle
-            value={this.state.question || ""}
+            value={this.state.question || ''}
             handleChange={this.handleTitleChange}
           />
 
@@ -181,8 +177,8 @@ class QuestionScreen extends Component {
               ? columns.map((column, index) => {
                   return (
                     <Label
-                      labelType="col"
                       key={index}
+                      labelType="col"
                       index={index}
                       label={column}
                       handleChange={this.handleColumnLabelChange}
@@ -247,16 +243,16 @@ class QuestionScreen extends Component {
           </p>
 
           <p className="text">
-            Longest row label: {this.normalizeNumber(maxRowLabel)}
+            Longest row label: {this.normalizeNumber(maxRow)}
           </p>
           <p className="text">
-            Shortest row label: {this.normalizeNumber(minRowLabel)}
+            Shortest row label: {this.normalizeNumber(minRow)}
           </p>
           <p className="text">
-            Longest column label: {this.normalizeNumber(maxColLabel)}
+            Longest column label: {this.normalizeNumber(maxCol)}
           </p>
           <p className="text">
-            Shortest column label: {this.normalizeNumber(minColLabel)}
+            Shortest column label: {this.normalizeNumber(minCol)}
           </p>
         </div>
       </div>
@@ -266,7 +262,6 @@ class QuestionScreen extends Component {
 
 const mapStateToProps = state => ({
   questions: state.questions,
-  selectedQuestionId: state.selectedQuestionId
 });
 
 const mapDispatchToProps = dispatch => ({

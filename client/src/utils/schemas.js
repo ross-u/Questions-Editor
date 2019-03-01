@@ -6,10 +6,10 @@ export class Question {
     this.columns = [];
     this.rows = [];
     this.imagesUploaded = 0;
-    this.minColLabel = undefined;
-    this.maxColLabel = undefined;
-    this.minRowLabel = undefined;
-    this.maxRowLabel = undefined;
+    this.minCol = undefined;
+    this.maxCol = undefined;
+    this.minRow = undefined;
+    this.maxRow = undefined;
   }
 };
 

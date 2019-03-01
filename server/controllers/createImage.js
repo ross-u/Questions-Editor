@@ -1,4 +1,5 @@
 const fs = require('fs-extra');
+const { PORT } = require('./../config');
 
 const postImage = (req, res) => {
   let fileStream;
@@ -12,7 +13,7 @@ const postImage = (req, res) => {
       console.log('Upload Finished: ', filename);
       res
         .status(201)
-        .send(`http://localhost:3000/get-image/${filename}`)
+        .send(`http://localhost:${PORT}/get-image/${filename}`)
     })
   })
 }

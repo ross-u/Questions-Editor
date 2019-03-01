@@ -17,7 +17,7 @@ app.use(function(req, res, next) {
 
 // Middleware
 app.use(busboy());
-app.use('/', express.static(__basedir + '/images'));
+app.use('/get-image', express.static(__basedir + '/images'));
 app.use(express.json());
 app.use(router);
 
