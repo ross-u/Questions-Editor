@@ -2,41 +2,27 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from 'react-router';
 import axios from "axios";
-import AddButton from "../components/AddButton";
+import shortid from 'shortid';
+import { API_URL } from './../utils/config'
+import "./QuestionScreen.css";
+
 import QuestionTitle from "../components/QuestionTitle";
 import Label from "../components/Label";
 import RowOptions from "../components/RowOptions";
-import "./QuestionScreen.css";
+import AddButton from "../components/AddButton";
 import { createQuestion, updateQuestion } from "../redux/actions";
-import shortid from 'shortid';
-
+import { Question, Column, Row } from './../utils/schemas';
 
 const maxColumns = 7;
 const maxRows = 12;
 
 class QuestionScreen extends Component {
-  state = {
-    id: 0,
-    question: "",
-    columns: [],
-    rows: [],
-    // columns: [{ image: undefined, label: undefined }],
-    // rows: [{ image: undefined, label: undefined, answer: undefined, answers: []}],
-    imagesUploaded: 0,
-    minColLabel: undefined,
-    maxColLabel: undefined,
-    minRowLabel: undefined,
-    maxRowLabel: undefined
-  };
+  state = new Question();
 
-  handleChange = async (e) => {
+  handleTitleChange = async (e) => {
     e.preventDefault();
     await this.setState({ question: e.target.value });
     this.props.updateQuestion(this.state);
-  };
-
-  updateImage = e => {
-    e.preventDefaut();
   };
 
   normalizeNumber = num => {
@@ -87,7 +73,7 @@ class QuestionScreen extends Component {
   addColumn = async () => {
     if (this.state.columns.length === maxColumns) return;
     const columns = [...this.state.columns];
-    columns.push({ image: undefined, label: undefined });
+    columns.push(new Column());
     await this.setState({ columns });
     this.props.updateQuestion(this.state);
   };
@@ -95,7 +81,7 @@ class QuestionScreen extends Component {
   addRow = async () => {
     if (this.state.rows.length === maxRows) return;
     const rows = [...this.state.rows];
-    rows.push({ image: undefined, label: undefined, answer: undefined, answers: [] });
+    rows.push(new Row());
     await this.setState({ rows });
     this.props.updateQuestion(this.state);
   };
@@ -130,7 +116,6 @@ class QuestionScreen extends Component {
   };
 
   updateRow = async (rowIndex, numberOfColumns, checkedIndex, answer) => {
-    console.log('UPDATE ROW INDEX');
     const rows = [...this.state.rows];
     rows[rowIndex].answers = new Array(numberOfColumns).fill(false);
     rows[rowIndex].answers[checkedIndex] = true;
@@ -140,7 +125,6 @@ class QuestionScreen extends Component {
   }
 
   resetRows = async () => {
-    console.log('RESET ROWS');
     const rows = [...this.state.rows];
     const emptyRows = rows.map( (row) => {
       row.answers = [];
@@ -148,24 +132,17 @@ class QuestionScreen extends Component {
     });
     await this.setState({ ...this.state, rows: emptyRows });
     this.props.updateQuestion(this.state);
-    console.log('AFTER RESET', this.state);
   }
 
   saveQuestion = () => {
-    const url = "http://localhost:3000/question/";
-    const payload = {...this.state};
-
     axios
-      .post(url, payload)
-      .then(res => {
-        this.props.history.push('/');
-      })
+      .post(`${API_URL}/question`, this.state)
+      .then(res => this.props.history.push('/'))
       .catch(err => console.error("Image upload error", err));
   };
 
   componentDidMount() {
     const question = this.props.location.state;
-
     if (!question) {
       (async () => {
         await this.setState({ id: shortid.generate()});
@@ -196,7 +173,7 @@ class QuestionScreen extends Component {
         <div id="question">
           <QuestionTitle
             value={this.state.question || ""}
-            handleChange={this.handleChange}
+            handleChange={this.handleTitleChange}
           />
 
           <div id="question-columns">
