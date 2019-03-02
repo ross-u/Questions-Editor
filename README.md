@@ -33,9 +33,7 @@ npm start
 
 ```bash
 cd server/
-
 npm install
-npm install nodemon --save-dev
 
 # Start the server
 npm start
