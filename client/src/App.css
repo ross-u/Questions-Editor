@@ -1,3 +1,17 @@
-.App {
-  text-align: center;
+body {
+  padding-bottom: 50px;
+}
+
+button:focus {
+  outline: none;
+}
+
+textarea {
+  border-bottom: 2px solid rgba(0, 129, 141, 0.074) !important;
+}
+
+textarea:focus {
+  outline: 0;
+  border-bottom: 1.5px solid #00828D !important;
+  transition: 1s;
 }
