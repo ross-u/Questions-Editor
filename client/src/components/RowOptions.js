@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import M from "materialize-css";
+import equal from 'fast-deep-equal';
 
 class RowOptions extends Component {
-  state = {
-    answersArray: []
+  constructor(props){
+    super(props);
+    this.state = {
+      answersArray: []
+    }
   }
 
   // col, colIndex, updateRow, row
@@ -20,7 +24,7 @@ class RowOptions extends Component {
               name='group1'
               id={`choice_${colIndex}`}
               value={colIndex}
-              defaultChecked={this.state.answersArray[colIndex]}
+              checked={this.state.answersArray[colIndex] || false}
               onChange={() => updateRow(rowIndex, columns.length, colIndex, (`col${colIndex}`))}
             />
             <span></span>
@@ -30,16 +34,30 @@ class RowOptions extends Component {
     );
   }
 
-  componentDidMount () {
-    M.AutoInit();
-    if (this.props.row.answers.length === 0) {
-      this.setState({answersArray: new Array(this.props.columns.length).fill(false)})
+  updateState = async (props) => {
+    if ( props.row.answers.length === 0) {
+      await this.setState({answersArray: new Array( props.columns.length).fill(false)})
     }
-    else this.setState({answersArray: this.props.row.answers});
+    else {
+      await this.setState({answersArray:  props.row.answers});
+    } 
   }
 
+  
+  componentDidUpdate() {
+    if (!equal(this.state.answersArray, this.props.row.answers) && this.props.row.answers.length > 0) {
+      this.updateState(this.props);
+    }
+  }
+  
+  componentDidMount () {
+    M.AutoInit();
+    this.updateState(this.props);
+  }
+  
   render () {
-    const { columns, updateRow, indexNum } = this.props;
+    let { columns, updateRow, indexNum } = this.props;
+    columns = [...columns];
 
     return (
       <div style={styles.inputFormWrapper}>

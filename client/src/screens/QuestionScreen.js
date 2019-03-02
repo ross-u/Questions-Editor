@@ -99,10 +99,10 @@ class QuestionScreen extends Component {
   resetRows = async () => {
     const rows = [...this.state.rows];
     const emptyRows = rows.map( (row) => {
-      row.answers = [];
+      row.answers = new Array( this.state.columns.length).fill(false);
       return row;
     });
-    await this.setState({ ...this.state, rows: emptyRows });
+    await this.setState({ rows: emptyRows });
     this.props.updateQuestion(this.state);
   }
 
