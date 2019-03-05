@@ -12,7 +12,7 @@ const insertNewQuestion = (question) => {
   );
 };
 
-const retrieveAllQuestions = (question) => {
+const retrieveAllQuestions = () => {
   const collection = db.dbConnection.db().collection(collectionName);
   return collection.find({}).toArray();
 };
