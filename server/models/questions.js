@@ -1,6 +1,9 @@
 const db = require('../db');
-
 const collectionName = 'questions';
+
+// const collections = db.collections;
+// const colName = 'questions';
+// return collections[colName].replaceOne
 
 const insertNewQuestion = (question) => {
   const collection = db.dbConnection.db().collection(collectionName);

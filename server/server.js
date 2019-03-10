@@ -22,7 +22,14 @@ app.use(router);
 // Server and DB connection
 (async () => {
   try {
-    db.dbConnection = await db.MongoClient.connect(URI, { useNewUrlParser: true });
+    // const connectedInstance = await db.MongoClient.connect(URI, { useNewUrlParser: true });
+    // db.connection = connectedInstance.db();
+    // db.collections['questions'] = db.connection.collection('questions');
+
+    
+    db.dbConnection = await db.MongoClient.connect(URI, { 
+      useNewUrlParser: true 
+    });
     app.listen(PORT, () => console.log(`Server is running on the port ${PORT}.`));
   } catch (err) {
     console.error('Server connection error', err);
