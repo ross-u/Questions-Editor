@@ -1,7 +1,7 @@
 const express = require('express');
 const { PORT, URI } = require('./config');
 const router = require('./router');
-const db = require('./db');
+const mongo = require('./db');
 const app = express();
 
 global.__basedir = __dirname;
@@ -22,7 +22,8 @@ app.use(router);
 // Server and DB connection
 (async () => {
   try {
-    db.dbConnection = await db.MongoClient.connect(URI, { useNewUrlParser: true });
+    mongo.dbConnection = await mongo.MongoClient.connect(URI, { useNewUrlParser: true });
+    mongo.collections['questions'] = mongo.dbConnection.db().collection('questions')
     app.listen(PORT, () => console.log(`Server is running on the port ${PORT}.`));
   } catch (err) {
     console.error('Server connection error', err);

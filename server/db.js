@@ -1,7 +1,8 @@
 // MongoDB connection.
 const MongoClient = require('mongodb').MongoClient;
-const db = {};
+const mongo = {};
 
-db.MongoClient = MongoClient;
+mongo.MongoClient = MongoClient;
+mongo.collections = [];
 
-module.exports = db;
+module.exports = mongo;

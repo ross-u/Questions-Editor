@@ -1,11 +1,9 @@
-const db = require('../db');
-
-const collectionName = 'questions';
+const mongo = require('../db');
+const { collections } = mongo;
 
 const insertNewQuestion = (question) => {
-  const collection = db.dbConnection.db().collection(collectionName);
   delete question._id;
-  return collection.replaceOne(
+  return collections['questions'].replaceOne(
     {'id': question.id},
     {...question},
     { upsert: true }  
@@ -13,13 +11,11 @@ const insertNewQuestion = (question) => {
 };
 
 const retrieveAllQuestions = () => {
-  const collection = db.dbConnection.db().collection(collectionName);
-  return collection.find({}).toArray();
+  return collections['questions'].find({}).toArray();
 };
 
 const deleteOneQuestion = async (id) => {
-  const collection = db.dbConnection.db().collection(collectionName);
-  let deletionResult = await collection.deleteOne({id});
+  let deletionResult = await collections['questions'].deleteOne({id});
   return deletionResult;
 };
 
