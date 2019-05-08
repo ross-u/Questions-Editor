@@ -1,5 +1,5 @@
 const dbUrl = 'mongodb://localhost:27017';
-const dbName = 'quantilope_challenge';
+const dbName = 'questions_editor';
 
 module.exports = {
   PORT: '3005',

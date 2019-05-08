@@ -5,7 +5,7 @@ const insertNewQuestion = (question) => {
   delete question._id;
   return collections['questions'].replaceOne(
     {'id': question.id},
-    {...question},
+    {...question || undefined},
     { upsert: true }  
   );
 };

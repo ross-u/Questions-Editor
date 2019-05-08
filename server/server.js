@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(router);
 
 // Server and DB connection
-(async () => {
+( async () => {
   try {
     mongo.dbConnection = await mongo.MongoClient.connect(URI, { useNewUrlParser: true });
     mongo.collections['questions'] = mongo.dbConnection.db().collection('questions')
@@ -29,3 +29,12 @@ app.use(router);
     console.error('Server connection error', err);
   }
 })();
+
+/*     mongo.MongoClient.connect(URI, { useNewUrlParser: true })
+      .then( ()=> {
+        mongo.collections['questions'] = mongo.dbConnection.db().collection('questions');
+      })
+      .then(() =>{
+        app.listen(PORT, () => console.log(`Server is running on the port ${PORT}.`));
+      })
+      .catch( (err) => console.error('Server connection error', err)); */
