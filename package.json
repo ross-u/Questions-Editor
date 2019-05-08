@@ -1,0 +1,28 @@
+{
+  "name": "monorepo-questions-editor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^8.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/server.js &&  cd client/;  npm start"
+  },
+  "engines": {
+    "node": "7.2.0",
+    "npm": "3.10.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ross-u/Questions-Editor.git"
+  },
+  "author": "Uros Cirkovic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ross-u/Questions-Editor/issues"
+  },
+  "homepage": "https://github.com/ross-u/Questions-Editor#readme"
+}
