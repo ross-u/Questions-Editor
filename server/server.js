@@ -3,6 +3,7 @@ const { PORT, URI } = require('./config');
 const router = require('./router');
 const mongo = require('./db');
 const app = express();
+require('dotenv').config();
 
 global.__basedir = __dirname;
 
