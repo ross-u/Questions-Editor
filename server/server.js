@@ -23,7 +23,7 @@ app.use(router);
 // Server and DB connection
 ( async () => {
   try {
-    mongo.dbConnection = await mongo.MongoClient.connect(URI, { useNewUrlParser: true });
+    mongo.dbConnection = await mongo.MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
     mongo.collections['questions'] = mongo.dbConnection.db().collection('questions')
     app.listen(PORT, () => console.log(`Server is running on the port ${PORT}.`));
   } catch (err) {
