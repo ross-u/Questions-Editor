@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
-const { PORT } = require('./../config');
 const Busboy = require('busboy');
-
+require('dotenv').config();
+const { PORT } =  process.env;
 
 const postImage = (req, res) => {
   const busboy = new Busboy({ headers: req.headers });

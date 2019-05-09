@@ -1,9 +1,10 @@
 const express = require('express');
-const { PORT, URI } = require('./config');
 const router = require('./router');
 const mongo = require('./db');
 const app = express();
 require('dotenv').config();
+const { PORT, MONGODB_URI } =  process.env;
+
 
 global.__basedir = __dirname;
 
@@ -23,8 +24,8 @@ app.use(router);
 // Server and DB connection
 ( async () => {
   try {
-    mongo.dbConnection = await mongo.MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
-    mongo.collections['questions'] = mongo.dbConnection.db().collection('questions')
+    mongo.dbConnection = await mongo.MongoClient.connect(MONGODB_URI, { useNewUrlParser: true });
+    mongo.collections['questions'] = mongo.dbConnection.db().collection('questions');
     app.listen(PORT, () => console.log(`Server is running on the port ${PORT}.`));
   } catch (err) {
     console.error('Server connection error', err);
